@@ -18,7 +18,7 @@ class docker(Builder):
         self.optionalKWArgs["image_os"] = None
         self.optionalKWArgs["entrypoint"] = None
         self.optionalKWArgs["cmd"] = None
-        self.optionalKWArgs["also"] = None
+        self.optionalKWArgs["also"] = []
 
         #We use the rootPath, not the buildPath.
         self.clearBuildPath = False
@@ -34,7 +34,7 @@ class docker(Builder):
         os.chdir(self.rootPath) # docker must be built from root.
         
         self.shouldLogin = False
-        if (len(self.repo) and self.docker_username is not None and self.docker_password is not None):
+        if (self.docker_username is not None and self.docker_password is not None):
             self.shouldLogin = True
 
         if (self.name == "Docker"):
