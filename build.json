@@ -11,6 +11,7 @@
         {"../inc/" : "inc/"}
       ],
       "config" : {
+      	"clear_build_path" : false,
         "visibility" : "public"
       }
     }
