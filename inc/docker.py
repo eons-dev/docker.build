@@ -1,7 +1,7 @@
 import os
 import logging
 from ebbs import Builder
-
+from eot import EOT
 
 # Class name is what is used at cli, so we defy convention here in favor of ease-of-use.
 class docker(Builder):
@@ -23,6 +23,7 @@ class docker(Builder):
         this.optionalKWArgs["entrypoint"] = None
         this.optionalKWArgs["cmd"] = None
         this.optionalKWArgs["also"] = []
+        this.optionalKWArgs["tags"] = []
 
         # We use the rootPath, not the buildPath.
         this.clearBuildPath = False
@@ -66,10 +67,13 @@ class docker(Builder):
         this.RunCommand(f"docker login -u=\"{this.docker_username}\" -p=\"{this.docker_password}\"")
 
     def BuildDockerImage(this):
-        this.RunCommand(f"docker build -t {this.image_name} .")
+        imageTags = f"-t {this.image_name}:{EOT.GetStardate()}"
+        for tag in this.tags:
+            imageTags += f" -t {this.image_name}:{tag}"
+        this.RunCommand(f"docker build {imageTags} .")
 
     def PushDockerImage(this):
-        this.RunCommand(f"docker push {this.image_name}")
+        this.RunCommand(f"docker push -a {this.image_name}")
 
     def CopyToImage(this, externalPath, imagePath):
         # This nonsense is required because we need `cp incPath/* buildpath/` behavior instead of `cp incPath buildpath/`
