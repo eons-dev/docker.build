@@ -132,6 +132,7 @@ dmypy.json
 generated/
 ebbs/
 eons/
+bulid/
 
 # Jetbrains
 /.idea/
