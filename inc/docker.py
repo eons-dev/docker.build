@@ -22,6 +22,7 @@ class docker(Builder):
         ]
         this.optionalKWArgs["entrypoint"] = None
         this.optionalKWArgs["cmd"] = None
+        this.optionalKWArgs["launch"] = {}
         this.optionalKWArgs["also"] = []
         this.optionalKWArgs["tags"] = []
 
@@ -117,7 +118,7 @@ class docker(Builder):
         if (this.libPath is not None):
             this.CopyToImage(this.libPath, "/usr/local/lib/")
 
-        if (this.srcPath is not None):
+        if (this.binPath is not None):
             this.CopyToImage(this.srcPath, "/usr/local/bin/")
             this.dockerfile.write("RUN chmod +x /usr/local/bin/*\n")
 
@@ -129,6 +130,9 @@ class docker(Builder):
             for pkg in this.install:
                 this.InstallPackage(pkg)
             this.CleanInstallation()
+
+        for key, value in this.launch.items():
+            this.dockerfile.write(f"RUN echo \"{value}\" > \"/launch.d/{key}\"\n")
 
         for add in this.also:
             this.dockerfile.write(f"{add}\n");
