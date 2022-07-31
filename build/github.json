@@ -1,6 +1,9 @@
 {
+  "name": "docker",
+  "type": "build",
+  "build_in" : "github",
   "clear_build_path" : true,
-  "ebbs_next": [
+  "next": [
     {
       "build" : "publish",
       "build_in" : "inc",
