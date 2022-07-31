@@ -8,6 +8,7 @@ You can specify:
 * `docker_username`: username for dockerhub (i.e. hub.docker.com).
 * `docker_password`: password for dockerhub.
 * `base_image`: image to use for the [FROM directive](https://docs.docker.com/engine/reference/builder/#format).
+* `emi`: run the [Eons Modular Installer](https://github.com/eons-dev/bin_emi); takes a dictionary of lists where the format is `{"merx": ["tomes"]}`; See the [emi docs](https://github.com/eons-dev/bin_emi) for more info; requires emi be installed in the `base_image` (true if you use `eons/img_base` or a child thereof).
 * `install`: list of packages to install (names only).
 * `image_os`: base operating system the `base_image` derives from (e.g. debian); this controls how packages are installed.
 * `entrypoint`: an [entrypoint](https://docs.docker.com/engine/reference/builder/#entrypoint) script; DO NOT USE THIS if you are using `launch`.
@@ -29,6 +30,15 @@ For example, this is the docker config portion of the bulild json for the eons w
         "gcc",
         "openssl"
     ],
+    "emi":
+    {
+      "install":
+      [
+        "all",
+        "my",
+        "tomes"
+      ]
+    },
     "tags" : [
         "latest"
     ]

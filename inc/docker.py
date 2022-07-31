@@ -14,6 +14,7 @@ class docker(Builder):
         this.optionalKWArgs["docker_username"] = None
         this.optionalKWArgs["docker_password"] = None
         this.optionalKWArgs["base_image"] = None
+        this.optionalKWArgs["emi"] = None
         this.optionalKWArgs["install"] = []
         this.optionalKWArgs["image_os"] = None
         this.optionalKWArgs["image_name"] = None
@@ -39,7 +40,7 @@ class docker(Builder):
         os.chdir(this.rootPath)  # docker must be built from root.
 
         this.shouldLogin = False
-        if (this.docker_username is not None and this.docker_password is not None):
+        if (this.docker_username is not None and this.docker_password is not None and len(this.docker_username) and len(this.docker_password)):
             this.shouldLogin = True
 
         if (this.image_name is None):
@@ -119,7 +120,7 @@ class docker(Builder):
             this.CopyToImage(this.libPath, "/usr/local/lib/")
 
         if (this.binPath is not None):
-            this.CopyToImage(this.srcPath, "/usr/local/bin/")
+            this.CopyToImage(this.binPath, "/usr/local/bin/")
             this.dockerfile.write("RUN chmod +x /usr/local/bin/*\n")
 
         for env in this.env:
@@ -130,6 +131,12 @@ class docker(Builder):
             for pkg in this.install:
                 this.InstallPackage(pkg)
             this.CleanInstallation()
+
+        if this.emi is not None:
+            logging.warning(f"ASSUMING: EMI is installed. If not, please install python3, python3-pip, and run 'pip install emi' in the base image")
+
+            for merx, tomes in this.emi.items():
+                this.dockerfile.write(f"RUN emi -v {merx} {' '.join(tomes)}\n")
 
         for key, value in this.launch.items():
             this.dockerfile.write(f"RUN echo \"{value}\" > \"/launch.d/{key}\"\n")
