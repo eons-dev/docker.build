@@ -11,7 +11,7 @@
       	"release"
       ],
       "copy" : [
-        {"../inc/" : "inc/"}
+        {"../../inc/" : "inc/"}
       ],
       "config" : {
       	"clear_build_path" : false,
