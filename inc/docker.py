@@ -35,6 +35,9 @@ class docker(Builder):
             "alpine"
         ]
 
+    def DidBuildSucceed(this):
+        return True #TODO: Make sure that image was created.
+
     # Required Builder method. See that class for details.
     def Build(this):
         os.chdir(this.rootPath)  # docker must be built from root.
@@ -62,9 +65,6 @@ class docker(Builder):
         this.WriteDockerfile()
         this.BuildDockerImage()
 
-        if (this.shouldLogin):
-            this.PushDockerImage()
-
     def LoginToDockerhub(this):
         this.RunCommand(f"docker login -u=\"{this.docker_username}\" -p=\"{this.docker_password}\"")
 
@@ -73,9 +73,6 @@ class docker(Builder):
         for tag in this.tags:
             imageTags += f" -t {this.image_name}:{tag}"
         this.RunCommand(f"docker build {imageTags} .")
-
-    def PushDockerImage(this):
-        this.RunCommand(f"docker push -a {this.image_name}")
 
     def CopyToImage(this, externalPath, imagePath):
         # This nonsense is required because we need `cp incPath/* buildpath/` behavior instead of `cp incPath buildpath/`

@@ -82,7 +82,7 @@ Here's how the infrastructure.tech web server builds a C++ executable in a conta
               "next" : [
                 {
                   "build": "docker",
-                  "run_when" : [
+                  "run_when_any" : [
                     "release"
                   ],
                   "path" : "srv_infrastructure",
