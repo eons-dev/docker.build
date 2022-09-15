@@ -108,7 +108,7 @@ class docker(Builder):
         this.dockerfile = open("Dockerfile", "w")
 
         if (this.base_image is not None):
-            this.dockerfile.write(f"FROM {this.base_image}\n")
+            this.dockerfile.write(f"FROM {this.base_image} as build\n")
 
         if (this.incPath is not None):
             this.CopyToImage(this.incPath, "/usr/local/include/")
@@ -135,11 +135,18 @@ class docker(Builder):
             for merx, tomes in this.emi.items():
                 this.dockerfile.write(f"RUN emi -v {merx} {' '.join(tomes)}\n")
 
+            this.dockerfile.write(f"RUN rm -rf ~/.eons/tmp; rm -rf ~/.eons/merx\n")
+
         for key, value in this.launch.items():
             this.dockerfile.write(f"RUN echo \"{value}\" > \"/launch.d/{key}\"\n")
 
         for add in this.also:
             this.dockerfile.write(f"{add}\n");
+
+        this.dockerfile.write(f'''
+FROM scratch
+COPY --from=build / /
+''')
 
         if (this.entrypoint is not None):
             this.dockerfile.write(f"ENTRYPOINT [\"{this.entrypoint}\"]\n")
