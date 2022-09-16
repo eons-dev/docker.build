@@ -102,7 +102,7 @@ class docker(Builder):
         if (this.image_os == "debian"):
             this.dockerfile.write("RUN rm -rf /var/lib/apt/lists/*\n")
         elif (this.image_os == "alpine"):
-            this.dockerfile.write("rm -rf /var/cache/apk/*")
+            this.dockerfile.write("RUN rm -rf /var/cache/apk/*")
 
     def WriteDockerfile(this):
         this.dockerfile = open("Dockerfile", "w")
