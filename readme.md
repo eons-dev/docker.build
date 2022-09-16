@@ -2,12 +2,27 @@
 
 This script is meant to be used by [ebbs](https://github.com/eons-dev/bin_ebbs)
 
-This script will automatically generate a Dockerfile, build a docker image, and, if you specify credentials, push that image to dockerhub.
-You can specify:
+Use `docker` to automatically generate a Dockerfile, build a docker image.  
+Use `docker_publish` to push that image to Dockerhub.
+
+## Optimization and Layers
+
+Dockerfile optimization has some tricks to it but those are unnecessary when using this script (e.g. you can have as many `RUN` directives as you want; no need to combine them). We attempt to optimize as best we can using the information we are given and will always prefer functionality to maintainability to optimization. Thus, we recommend using as many directives (and creating as many layers) as is necessary for your code to work.
+
+The `docker` script will automatically flatten your layers as the last build step. This removes the history but also removes all the overhead created by extra layers.
+
+## Combining Multiple Images
+
+Some people say you can't combine the contents of multiple docker images. That is a lie.
+
+To combine the full contents of any number of images, simply add the name (and tag) to the `combine` list in the configuration (see below).
+
+## Config
 
 * `docker_username`: username for dockerhub (i.e. hub.docker.com).
 * `docker_password`: password for dockerhub.
 * `base_image`: image to use for the [FROM directive](https://docs.docker.com/engine/reference/builder/#format).
+* `combine`: images you want to combine (e.g. `["me/onecoolimage:latest", "someoneelese/anothercoolimage:latest"]`).
 * `emi`: run the [Eons Modular Installer](https://github.com/eons-dev/bin_emi); takes a dictionary of lists where the format is `{"merx": ["tomes"]}`; See the [emi docs](https://github.com/eons-dev/bin_emi) for more info; requires emi be installed in the `base_image` (true if you use `eons/img_base` or a child thereof).
 * `install`: list of packages to install (names only).
 * `image_os`: base operating system the `base_image` derives from (e.g. debian); this controls how packages are installed.
@@ -18,7 +33,7 @@ You can specify:
 * `tags`: list of [tags](https://docs.docker.com/engine/reference/commandline/tag/) to add to the built image.
 
 
-For example, this is the docker config portion of the bulild json for the eons webserver image.
+For example, this is the docker config portion of the build json for the eons webserver image.
 ```json
 "config":
 {
@@ -116,7 +131,7 @@ Here's how the infrastructure.tech web server builds a C++ executable in a conta
 Using this single config file, we can perform a cmake build process and a Dockerfile containerization & publication all in one go.
 Of course, if you'd like to publish your image, you must specify `docker_username` and `docker_password` in the environment variables (unless you want to put them in the json but please don't do that).
 
-## Latest Tag
+### Latest Tag
 
 Please include the "latest" tag in your config. We don't add this automatically because it is not always desired. The only tag we automatically add is the current [stardate](https://github.com/eons-dev/bin_eot).
 
@@ -127,6 +142,11 @@ Here's the code to add:
 ]
 ```
 
-## Optimization and Layers
+### Use With img_guest
 
-Dockerfile optimization has some tricks to it. We will attempt to optimize as best we can using the information we are given. However, we will always prefer functionality to maintainability to optimization. Thus, we recommend using as many directives (and creating as many layers) as is necessary for your code to work.
+If your image derives from infrastructure-tech/img_guest (or compatible), there are the following additional configuration values available to you:
+
+* `networks`: a list of networks to connect to
+* `filesystems`: a list of filesystems to mount.
+
+
