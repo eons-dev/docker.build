@@ -4,7 +4,7 @@ from ebbs import Builder
 from eot import EOT
 
 # Class name is what is used at cli, so we defy convention here in favor of ease-of-use.
-class docker(Builder):
+class docker_publish(Builder):
     def __init__(this, name="Docker"):
         super().__init__(name)
 
