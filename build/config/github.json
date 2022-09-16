@@ -23,7 +23,7 @@
       "build" : "publish",
       "build_in" : "build_docker_publish",
       "copy" : [
-        {"../../../inc/docker_publish.py" : "build_docker/docker_publish.py"}
+        {"../../../inc/docker_publish.py" : "build_docker_publish/docker_publish.py"}
       ],
       "config" : {
         "name" : "docker_publish",

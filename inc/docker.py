@@ -96,13 +96,13 @@ class docker(Builder):
         if (this.image_os == "debian"):
             this.dockerfile.write(f"RUN apt install -y --no-install-recommends {packageName}\n")
         elif (this.image_os == "alpine"):
-            this.dockerfile.write(f"RUN apk add --no-cache {packageName}\n")
+            this.dockerfile.write(f"RUN apk add {packageName}\n")
 
     def CleanInstallation(this):
         if (this.image_os == "debian"):
             this.dockerfile.write("RUN rm -rf /var/lib/apt/lists/*\n")
         elif (this.image_os == "alpine"):
-            pass  # no cleanup necessary for alpine at this time.
+            this.dockerfile.write("rm -rf /var/cache/apk/*")
 
     def WriteDockerfile(this):
         this.dockerfile = open("Dockerfile", "w")
@@ -130,7 +130,7 @@ class docker(Builder):
             this.CleanInstallation()
 
         if this.emi is not None:
-            logging.warning(f"ASSUMING: EMI is installed. If not, please install python3, python3-pip, and run 'pip install emi' in the base image")
+            # logging.warning(f"ASSUMING: EMI is installed. If not, please install python3, python3-pip, and run 'pip install emi' (other packages may be required depending on your os)")
 
             for merx, tomes in this.emi.items():
                 this.dockerfile.write(f"RUN emi -v {merx} {' '.join(tomes)}\n")
