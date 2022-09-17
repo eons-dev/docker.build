@@ -149,4 +149,45 @@ If your image derives from infrastructure-tech/img_guest (or compatible), there 
 * `networks`: a list of networks to connect to
 * `filesystems`: a list of filesystems to mount.
 
+#### Networks
+
+You can add a network with the following config:
+```json
+"networks": [
+  {
+    "name" : "name-in-configuration-folder",
+    "order" : 20
+  }
+]
+```
+`order` is optional but will affect when the network will be brought up per the [img_base launch system](https://github.com/eons-dev/img_base#supervisor).
+
+NOTE: you must create your network configuration (e.g. tinc) folder as described in the [img_network-enabled docs](https://github.com/infrastructure-tech/img_network-enabled/).
+
+#### Filesystems
+
+You can add filesystem to your image through Rclone FUSE mounts:
+```json
+"filesystems": [
+  {
+    "name": "name-in-configuration-file",
+    "mount": "/mnt/or/whatever",
+    "options": {
+      "buffer-size": "64M",
+      "config": "/root/.config/rclone/rclone.conf",
+      "dir-cache-time": "168h",
+      "drive-chunk-size": "64M",
+      "fast-list": true,
+      "syslog": true,
+      "allow-other": false,
+      "vfs-read-chunk-size-limit": "1024M",
+      "vfs-read-chunk-size": "64M",
+      "order": 10
+    },
+  }
+]
+```
+Both `options` and `order` are optional. Anything set in `options` will override the default. A full list of options can be found in the [Rclone documentation](https://rclone.org/flags/). Like with Networks, `order` determines when the filesystem mount will be created in relation to other launched processes.
+
+NOTE: The file `/root/.config/rclone/rclone.conf` should be created before the image is `/launch`ed (e.g. create it during cloud-init in img_base or specify it in your img_host deployment; whatever you do, please don't hard code your credentials into your image!).
 
