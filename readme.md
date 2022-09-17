@@ -171,6 +171,15 @@ You can add filesystem to your image through Rclone FUSE mounts:
 "filesystems": [
   {
     "name": "name-in-configuration-file",
+    "mount": "/mnt/or/whatever"
+  }
+]
+```
+or, alternatively:
+```json
+"filesystems": [
+  {
+    "name": "name-in-configuration-file",
     "mount": "/mnt/or/whatever",
     "options": {
       "buffer-size": "64M",
@@ -181,9 +190,9 @@ You can add filesystem to your image through Rclone FUSE mounts:
       "syslog": true,
       "allow-other": false,
       "vfs-read-chunk-size-limit": "1024M",
-      "vfs-read-chunk-size": "64M",
-      "order": 10
+      "vfs-read-chunk-size": "64M"
     },
+    "order": 10
   }
 ]
 ```
