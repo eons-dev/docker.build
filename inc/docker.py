@@ -207,14 +207,14 @@ class docker(Builder):
 
         for fs in this.filesystems:
             order = 0
-            if ('order' in net):
+            if ('order' in fs):
                 order = int(net['order'])
 
             options = {}
             if ('options' in fs):
                 options = fs['options']
 
-            this.CreateFilesystem(fs['filesystem'], fs['mount'], options, order)
+            this.CreateFilesystem(fs['name'], fs['mount'], options, order)
 
         
         #### LAUNCH ####
