@@ -174,8 +174,8 @@ class docker(Builder):
         if (this.libPath is not None):
             this.CopyToImage(this.libPath, "/usr/local/lib/")
 
-        if (this.binPath is not None):
-            this.CopyToImage(this.binPath, "/usr/local/bin/")
+        if (this.exePath is not None):
+            this.CopyToImage(this.exePath, "/usr/local/bin/")
             this.dockerfile.write("RUN chmod +x /usr/local/bin/*\n")
 
         for env in this.env:
