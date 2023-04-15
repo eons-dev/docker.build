@@ -29,7 +29,10 @@ To combine the full contents of any number of images, simply add the name (and t
 * `entrypoint`: an [entrypoint](https://docs.docker.com/engine/reference/builder/#entrypoint) script; DO NOT USE THIS if you are using `launch`.
 * `cmd`: a [command](https://docs.docker.com/engine/reference/builder/#cmd); DO NOT USE THIS if you are using `launch`.
 * `launch`: an array of launch scripts; these are identical to `entrypoint`, except that there can be more than 1.
+* `first`: any other dockerfile directives you'd like to run before anything else gets added.
+* `after_setup`: any other dockerfile directives you'd like to add after imports but before configuration.
 * `also`: any other dockerfile directives you'd like (you can create an entire dockerfile just in `also`).
+* `last`: any other dockerfile directives you'd like to add after the image is finalized.
 * `tags`: list of [tags](https://docs.docker.com/engine/reference/commandline/tag/) to add to the built image.
 
 

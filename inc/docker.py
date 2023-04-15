@@ -25,7 +25,10 @@ class docker(Builder):
         this.optionalKWArgs["entrypoint"] = "/launch"
         this.optionalKWArgs["cmd"] = None
         this.optionalKWArgs["launch"] = {}
+        this.optionalKWArgs["first"] = []
+        this.optionalKWArgs["after_setup"] = []
         this.optionalKWArgs["also"] = []
+        this.optionalKWArgs["last"] = []
         this.optionalKWArgs["tags"] = []
         this.optionalKWArgs["filesystems"] = []
         this.optionalKWArgs["networks"] = []
@@ -154,6 +157,9 @@ class docker(Builder):
     def WriteDockerfile(this):
         this.dockerfile = this.CreateFile("Dockerfile")
 
+        for add in this.first:
+            this.dockerfile.write(f"{add}\n")
+
 
         #### SETUP BASE ####
 
@@ -164,6 +170,9 @@ class docker(Builder):
 
         for i, img in enumerate(this.combine):
             this.dockerfile.write(f"COPY --from=combo{i} / /\n")
+
+        for add in this.after_setup:
+            this.dockerfile.write(f"{add}\n")
 
 
         #### IMPLICIT CONFIG ####
@@ -226,7 +235,7 @@ class docker(Builder):
         #### EXTRA ####
 
         for add in this.also:
-            this.dockerfile.write(f"{add}\n");
+            this.dockerfile.write(f"{add}\n")
 
 
         #### FINALIZE IMAGE ####
@@ -241,5 +250,9 @@ COPY --from=build / /
 
         if (this.cmd is not None):
             this.dockerfile.write(f"CMD [\"{this.cmd}\"]\n")
+
+        for add in this.last:
+            this.dockerfile.write(f"{add}\n")
+
 
         this.dockerfile.close()
