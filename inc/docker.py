@@ -22,7 +22,7 @@ class docker(Builder):
         this.optionalKWArgs["env"] = [
             "TZ=\"America/Los_Angeles\""
         ]
-        this.optionalKWArgs["entrypoint"] = None
+        this.optionalKWArgs["entrypoint"] = "/launch"
         this.optionalKWArgs["cmd"] = None
         this.optionalKWArgs["launch"] = {}
         this.optionalKWArgs["also"] = []
