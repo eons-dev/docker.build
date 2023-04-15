@@ -194,7 +194,7 @@ class docker(Builder):
             # logging.warning(f"ASSUMING: EMI is installed. If not, please install python3, python3-pip, and run 'pip install emi' (other packages may be required depending on your os)")
 
             for merx, tomes in this.emi.items():
-                this.dockerfile.write(f"RUN emi -v {merx} {' '.join(tomes)}\n")
+                this.dockerfile.write(f"RUN emi -vvv {merx} {' '.join(tomes)}\n")
 
             this.dockerfile.write(f"RUN rm -rf ~/.eons/tmp; rm -rf ~/.eons/merx\n")
 
