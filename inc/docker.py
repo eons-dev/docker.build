@@ -22,10 +22,13 @@ class docker(Builder):
         this.optionalKWArgs["env"] = [
             "TZ=\"America/Los_Angeles\""
         ]
-        this.optionalKWArgs["entrypoint"] = None
+        this.optionalKWArgs["entrypoint"] = "/launch"
         this.optionalKWArgs["cmd"] = None
         this.optionalKWArgs["launch"] = {}
+        this.optionalKWArgs["first"] = []
+        this.optionalKWArgs["after_setup"] = []
         this.optionalKWArgs["also"] = []
+        this.optionalKWArgs["last"] = []
         this.optionalKWArgs["tags"] = []
         this.optionalKWArgs["filesystems"] = []
         this.optionalKWArgs["networks"] = []
@@ -154,6 +157,9 @@ class docker(Builder):
     def WriteDockerfile(this):
         this.dockerfile = this.CreateFile("Dockerfile")
 
+        for add in this.first:
+            this.dockerfile.write(f"{add}\n")
+
 
         #### SETUP BASE ####
 
@@ -164,6 +170,9 @@ class docker(Builder):
 
         for i, img in enumerate(this.combine):
             this.dockerfile.write(f"COPY --from=combo{i} / /\n")
+
+        for add in this.after_setup:
+            this.dockerfile.write(f"{add}\n")
 
 
         #### IMPLICIT CONFIG ####
@@ -194,7 +203,7 @@ class docker(Builder):
             # logging.warning(f"ASSUMING: EMI is installed. If not, please install python3, python3-pip, and run 'pip install emi' (other packages may be required depending on your os)")
 
             for merx, tomes in this.emi.items():
-                this.dockerfile.write(f"RUN emi -v {merx} {' '.join(tomes)}\n")
+                this.dockerfile.write(f"RUN emi -vvv {merx} {' '.join(tomes)}\n")
 
             this.dockerfile.write(f"RUN rm -rf ~/.eons/tmp; rm -rf ~/.eons/merx\n")
 
@@ -226,7 +235,7 @@ class docker(Builder):
         #### EXTRA ####
 
         for add in this.also:
-            this.dockerfile.write(f"{add}\n");
+            this.dockerfile.write(f"{add}\n")
 
 
         #### FINALIZE IMAGE ####
@@ -241,5 +250,9 @@ COPY --from=build / /
 
         if (this.cmd is not None):
             this.dockerfile.write(f"CMD [\"{this.cmd}\"]\n")
+
+        for add in this.last:
+            this.dockerfile.write(f"{add}\n")
+
 
         this.dockerfile.close()
