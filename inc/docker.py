@@ -208,7 +208,7 @@ class docker(Builder):
         for fs in this.filesystems:
             order = 0
             if ('order' in fs):
-                order = int(net['order'])
+                order = int(fs['order'])
 
             options = {}
             if ('options' in fs):
