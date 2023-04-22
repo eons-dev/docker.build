@@ -124,14 +124,13 @@ class docker(Builder):
 		launchFileName = f"{order}filesystem_{filesystem}"
 
 		launchFile = this.CreateFile(launchFileName)
+		launchFile.write(f"mkdir -p {mount}; ")
 
 		defaultOptions = {}
 		defaultOptions['buffer-size'] = "64M"
 		defaultOptions['config'] = "/root/.config/rclone/rclone.conf"
 		defaultOptions['dir-cache-time'] = "168h"
 		defaultOptions['drive-chunk-size'] = "64M"
-		defaultOptions['fast-list'] = True
-		defaultOptions['syslog'] = True
 		defaultOptions['allow-other'] = False
 		defaultOptions['vfs-read-chunk-size-limit'] = "1024M"
 		defaultOptions['vfs-read-chunk-size'] = "64M"
@@ -150,6 +149,7 @@ class docker(Builder):
 			else:
 				launchFile.write(f"--{opt}={val} ")
 		launchFile.write(f"{filesystem} {mount}")
+	
 		launchFile.close
 		
 		this.dockerfile.write(f"COPY {launchFileName} /launch.d/{launchFileName}\n")
