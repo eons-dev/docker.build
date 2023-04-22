@@ -148,8 +148,13 @@ class docker(Builder):
 					launchFile.write(f"--{opt} ")
 			else:
 				launchFile.write(f"--{opt}={val} ")
-		launchFile.write(f"{filesystem} {mount}")
-	
+		
+		fullFilesystem = f"{filesystem}:"
+		if (filesystem.contains(":")):
+			fullFilesystem = filesystem
+
+		launchFile.write(f"{fullFilesystem} {mount}")
+
 		launchFile.close
 		
 		this.dockerfile.write(f"COPY {launchFileName} /launch.d/{launchFileName}\n")
