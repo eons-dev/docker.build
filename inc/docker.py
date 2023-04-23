@@ -161,7 +161,7 @@ class docker(Builder):
 
 		launchFile.close
 
-		this.dockerfile.write(f"RUN mkdir -p {mount}")
+		this.dockerfile.write(f"RUN mkdir -p {mount}\n")
 		this.dockerfile.write(f"COPY {launchFileName} /launch.d/{launchFileName}\n")
 
 	def WriteDockerfile(this):
