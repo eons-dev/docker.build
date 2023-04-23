@@ -149,9 +149,9 @@ class docker(Builder):
 			else:
 				launchFile.write(f"--{opt}={val} ")
 		
-		fullFilesystem = f"{filesystem}:"
-		if (filesystem.contains(":")):
-			fullFilesystem = filesystem
+		fullFilesystem = filesystem
+		if (":" not in filesystem):
+			fullFilesystem = f"{filesystem}:"
 
 		launchFile.write(f"{fullFilesystem} {mount}")
 
