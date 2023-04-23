@@ -124,7 +124,6 @@ class docker(Builder):
 		launchFileName = f"{order}filesystem_{filesystem}"
 
 		launchFile = this.CreateFile(launchFileName)
-		launchFile.write(f"mkdir -p {mount}; ")
 
 		defaultOptions = {}
 		defaultOptions['buffer-size'] = "64M"
@@ -161,7 +160,8 @@ class docker(Builder):
 		launchFile.write(f"{fullFilesystem} {mount}")
 
 		launchFile.close
-		
+
+		this.dockerfile.write(f"RUN mkdir -p {mount}")
 		this.dockerfile.write(f"COPY {launchFileName} /launch.d/{launchFileName}\n")
 
 	def WriteDockerfile(this):
