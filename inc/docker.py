@@ -132,6 +132,10 @@ class docker(Builder):
 		defaultOptions['dir-cache-time'] = "168h"
 		defaultOptions['drive-chunk-size'] = "64M"
 		defaultOptions['allow-other'] = False
+		defaultOptions['vfs-cache-mode'] = "full"
+		defaultOptions['vfs-cache-max-age'] = "24h"
+		defaultOptions['vfs-cache-max-size'] = "20G"
+		defaultOptions['vfs-cache-poll-interval'] = "1m"
 		defaultOptions['vfs-read-chunk-size-limit'] = "1024M"
 		defaultOptions['vfs-read-chunk-size'] = "64M"
 
