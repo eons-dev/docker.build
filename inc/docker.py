@@ -83,7 +83,11 @@ class docker(Builder):
 
 	def AddEnvironmentVariables(this):
 		for name, value in this.env.items():
+			# Make env available during build
 			this.dockerfile.write(f"ENV {name}={value}\n")
+
+			# Persist env vars
+			this.dockerfile.write(f"RUN echo 'export {name}={value}' >> /.env\n")
 
 	def CopyToImage(this, externalPath, imagePath):
 		# This nonsense is required because we need `cp incPath/* buildpath/` behavior instead of `cp incPath buildpath/`
@@ -252,18 +256,10 @@ class docker(Builder):
 
 
 		#### FINALIZE IMAGE ####
-
 		this.dockerfile.write(f'''
 FROM scratch
 COPY --from=build / /
 ''')
-			
-		# Restore the environment variables
-		this.AddEnvironmentVariables()
-
-		# Persist env vars
-		for name, value in this.env.items():
-			this.dockerfile.write(f"RUN echo 'export {name}={value}' >> /.env\n")
 
 		if (this.entrypoint is not None):
 			this.dockerfile.write(f"ENTRYPOINT [\"{this.entrypoint}\"]\n")

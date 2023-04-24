@@ -34,7 +34,7 @@ To combine the full contents of any number of images, simply add the name (and t
 * `also`: any other dockerfile directives you'd like (you can create an entire dockerfile just in `also`).
 * `last`: any other dockerfile directives you'd like to add after the image is finalized.
 * `tags`: list of [tags](https://docs.docker.com/engine/reference/commandline/tag/) to add to the built image.
-
+* `env`: environment variables to add to the image; these are also stored in /.env for use by child images (e.g. through `. /.env`).
 
 For example, this is the docker config portion of the build json for the eons webserver image.
 ```json
