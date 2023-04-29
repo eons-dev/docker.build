@@ -123,7 +123,7 @@ class docker(Builder):
 		if (order):
 			order = f"{order}_"
 
-		this.dockerfile.write(f"RUN echo \"tinc -n {network} start\" > \"/launch.d/{order}network_{network}\"\n")
+		this.dockerfile.write(f"RUN echo \"tinc -n {network} start -D\" > \"/launch.d/{order}network_{network}\"\n")
 
 	def CreateFilesystem(this, filesystem, mount, options={}, order=0):
 		if (order):
